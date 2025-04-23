@@ -44,7 +44,7 @@ To run this project locally, follow these steps:
 1.  **Clone the repository:**
     ```bash
     git clone https://github.com/MegtonLabs/Chat-Application.git
-    cd YOUR_REPOSITORY_NAME
+    cd Chat-Application
     ```
     *(Replace `MegtonLabs` and `Chat-Application`)*
 
