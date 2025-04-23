@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Chat</title>
+    <style>
+        /* Basic Reset */
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5;
+            /* overflow: hidden; <-- Controlled by JS */
+        }
+
+        /* --- Modal Styles --- */
+        #modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            /* Start hidden */
+            /* visibility: hidden; opacity: 0; transition: visibility 0s linear 0.2s, opacity 0.2s linear; */
+        }
+        /* #modal-overlay.visible { visibility: visible; opacity: 1; transition: visibility 0s linear 0s, opacity 0.2s linear; } */
+
+        #username-modal {
+            background-color: #fff;
+            padding: 30px 40px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            min-width: 300px;
+            max-width: 90%;
+            z-index: 1001;
+        }
+        #username-modal h2 { margin-top: 0; margin-bottom: 20px; color: #333; }
+        #modalUsernameInput { width: calc(100% - 22px); padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px; font-size: 1em; }
+        #modalSetUsernameButton { padding: 10px 25px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 1em; transition: background-color 0.2s ease; }
+        #modalSetUsernameButton:hover { background-color: #218838; }
+        #modalUsernameError { color: red; font-size: 0.9em; margin-top: -10px; margin-bottom: 10px; min-height: 1.2em; display: block; }
+
+        /* --- Chat Container Styles --- */
+        #chat-container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            height: 80vh;
+            max-height: 700px;
+            margin: 5vh auto; /* Center container */
+        }
+        #chat-container.disabled {
+            filter: blur(3px);
+            pointer-events: none;
+            user-select: none;
+        }
+
+        /* --- Rest of Chat CSS --- */
+        #chat-header { background-color: #007bff; color: white; padding: 15px 20px; font-size: 1.2em; font-weight: bold; border-bottom: 1px solid #ddd; }
+        #username-display { font-size: 0.8em; font-weight: normal; opacity: 0.9; }
+        #chatbox { flex-grow: 1; overflow-y: auto; padding: 20px; background-color: #f9f9f9; border-bottom: 1px solid #eee; }
+        .message { margin-bottom: 12px; line-height: 1.4; display: flex; flex-direction: column; }
+        .message .username { font-weight: bold; font-size: 0.85em; color: #333; margin-bottom: 3px; }
+        .message .text { padding: 8px 12px; border-radius: 18px; max-width: 75%; word-wrap: break-word; }
+        .message.other { align-items: flex-start; }
+        .message.other .text { background-color: #e4e6eb; color: #050505; border-bottom-left-radius: 5px; }
+        .message.other .username { color: #0056b3; }
+        .message.self { align-items: flex-end; }
+        .message.self .text { background-color: #007bff; color: white; border-bottom-right-radius: 5px; }
+        .message.self .username { color: #003f8a; }
+        .message.system { font-style: italic; color: #6c757d; font-size: 0.9em; text-align: center; align-items: center; margin-top: 10px; margin-bottom: 15px; }
+        .message.system .text { background-color: transparent; padding: 0; }
+        .message.system .username { display: none; }
+        #input-area { display: flex; padding: 15px; background-color: #fff; }
+        #messageInput { flex-grow: 1; padding: 10px 15px; border: 1px solid #ccc; border-radius: 20px; margin-right: 10px; font-size: 1em; outline: none; }
+        #messageInput:focus { border-color: #007bff; box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25); }
+        #sendButton { padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 20px; cursor: pointer; font-size: 1em; font-weight: bold; transition: background-color 0.2s ease; }
+        #sendButton:hover { background-color: #0056b3; }
+        #sendButton:disabled { background-color: #cccccc; cursor: not-allowed; }
+
+        /* Utility class */
+        .hidden {
+            display: none !important; /* Force hide */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Modal Overlay and Box (Starts hidden by JS logic) -->
+    <div id="modal-overlay" class="hidden"> <!-- Start hidden, JS will show if needed -->
+        <div id="username-modal">
+            <h2>Enter Your Username</h2>
+            <input type="text" id="modalUsernameInput" placeholder="Your name..." maxlength="20">
+            <div id="modalUsernameError"></div>
+            <button id="modalSetUsernameButton">Join Chat</button>
+        </div>
+    </div>
+
+    <!-- Main Chat Container (Starts visually disabled by JS logic) -->
+    <div id="chat-container"> <!-- No initial disabled class, JS adds if needed -->
+        <div id="chat-header">
+            Real-Time Chat
+            <div id="username-display">Waiting for user...</div>
+        </div>
+        <div id="chatbox"></div>
+        <div id="input-area">
+            <input type="text" id="messageInput" placeholder="Type your message..." disabled>
+            <button id="sendButton" disabled>Send</button>
+        </div>
+    </div>
+
+    <script>
+        console.log("Chat script starting...");
+
+        // --- Get Element References ---
+        const modalOverlay = document.getElementById('modal-overlay');
+        const usernameModal = document.getElementById('username-modal');
+        const modalUsernameInput = document.getElementById('modalUsernameInput');
+        const modalSetUsernameButton = document.getElementById('modalSetUsernameButton');
+        const modalUsernameError = document.getElementById('modalUsernameError');
+
+        const chatContainer = document.getElementById('chat-container');
+        const chatbox = document.getElementById('chatbox');
+        const messageInput = document.getElementById('messageInput');
+        const sendButton = document.getElementById('sendButton');
+        const usernameDisplay = document.getElementById('username-display');
+
+        // --- Global Variables ---
+        let myUsername = '';
+        let ws = null; // WebSocket connection object
+
+        // --- Check if Elements Exist (Essential Debugging) ---
+        if (!modalOverlay || !chatContainer || !modalUsernameInput || !modalSetUsernameButton || !modalUsernameError || !messageInput || !sendButton || !usernameDisplay) {
+            console.error("FATAL ERROR: One or more essential HTML elements are missing or have incorrect IDs. Check the HTML structure.");
+            alert("Chat interface failed to load. Please check the developer console (F12) for errors.");
+        } else {
+            console.log("All essential HTML elements found.");
+        }
+
+        // --- Modal Control ---
+        function showModal(show) {
+            console.log(`showModal called with: ${show}`);
+            if (!modalOverlay || !chatContainer) return; // Safety check
+
+            if (show) {
+                modalOverlay.classList.remove('hidden');
+                chatContainer.classList.add('disabled'); // Disable chat visually
+                document.body.style.overflow = 'hidden'; // Prevent background scrolling
+                if(modalUsernameInput) modalUsernameInput.focus();
+                console.log("Modal shown, chat disabled.");
+            } else {
+                modalOverlay.classList.add('hidden');
+                chatContainer.classList.remove('disabled'); // Enable chat visually
+                document.body.style.overflow = ''; // Allow scrolling again
+                console.log("Modal hidden, chat enabled.");
+            }
+        }
+
+        // --- Start Chat Logic ---
+        function startChat(username) {
+            console.log(`Starting chat for username: ${username}`);
+            if (!username) {
+                console.error("startChat called without a username. Showing modal.");
+                showModal(true); // Re-show modal if something went wrong
+                return;
+            }
+            myUsername = username;
+            if (usernameDisplay) usernameDisplay.textContent = `You are: ${myUsername}`;
+
+            showModal(false); // Hide modal, enable chat container
+
+            // Only connect if not already connected or trying to connect
+            if (!ws || (ws.readyState !== WebSocket.OPEN && ws.readyState !== WebSocket.CONNECTING)) {
+                connectWebSocket();
+            } else {
+                 console.log("WebSocket already exists and is open or connecting.");
+                 // Ensure UI is enabled if connection is already open
+                 if(ws.readyState === WebSocket.OPEN) {
+                     if(messageInput) messageInput.disabled = false;
+                     if(sendButton) sendButton.disabled = false;
+                     if(messageInput) messageInput.focus();
+                 }
+            }
+        }
+
+        // --- Username Submission Handler ---
+        function handleUsernameSubmit() {
+            console.log("Handling username submission...");
+            if (!modalUsernameInput || !modalUsernameError) return; // Safety check
+
+            const enteredUsername = modalUsernameInput.value.trim();
+            console.log(`Username entered in modal: "${enteredUsername}"`);
+
+            // Basic Validation
+            if (enteredUsername.length < 2) {
+                modalUsernameError.textContent = 'Username must be at least 2 characters.';
+                return;
+            }
+            if (enteredUsername.length > 20) {
+                modalUsernameError.textContent = 'Username cannot exceed 20 characters.';
+                return;
+            }
+            if (!/^[a-zA-Z0-9_ ]+$/.test(enteredUsername)) { // Allow letters, numbers, underscore, space
+                 modalUsernameError.textContent = 'Invalid characters. Use letters, numbers, spaces, underscores.';
+                 return;
+            }
+
+            modalUsernameError.textContent = ''; // Clear any previous error
+            console.log("Username validated successfully.");
+            try {
+                localStorage.setItem('chatUsername', enteredUsername); // Save username
+                console.log("Username saved to localStorage.");
+                startChat(enteredUsername); // Proceed to start the chat interface
+            } catch (e) {
+                 console.error("Error saving username to localStorage:", e);
+                 modalUsernameError.textContent = 'Could not save username. Storage might be full or disabled.';
+                 // Optionally: Proceed without saving? startChat(enteredUsername);
+            }
+        }
+
+        // --- WebSocket Connection ---
+        function connectWebSocket() {
+            // Prevent multiple connections
+            if (ws && (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING)) {
+                console.warn("connectWebSocket called but connection already open or connecting.");
+                return;
+            }
+
+            const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsUrl = `${wsProtocol}//${window.location.host}`;
+            console.log(`Attempting to connect WebSocket to ${wsUrl}...`);
+
+            try {
+                 ws = new WebSocket(wsUrl);
+            } catch (error) {
+                 console.error("Failed to create WebSocket object:", error);
+                 displayMessage({ type: 'system', text: 'Error: Could not initiate connection.' });
+                 return; // Stop here if creation fails
+            }
+
+
+            ws.onopen = () => {
+                console.log('WebSocket connection established.');
+                if(messageInput) messageInput.disabled = false;
+                if(sendButton) sendButton.disabled = false;
+                if(messageInput) messageInput.focus();
+                // Server already sends welcome message upon connection
+            };
+
+            ws.onmessage = (event) => {
+                console.log('WebSocket message received:', event.data);
+                try {
+                    const messageData = JSON.parse(event.data);
+                    displayMessage(messageData); // Display the parsed message
+                } catch (error) {
+                    console.error("Failed to parse incoming message JSON:", event.data, error);
+                    // Display raw data if parsing fails? Or an error message.
+                    displayMessage({ type: 'system', text: `Received unreadable data from server.` });
+                }
+            };
+
+            ws.onclose = (event) => {
+                console.log(`WebSocket connection closed. Code: ${event.code}, Reason: ${event.reason}, Clean: ${event.wasClean}`);
+                ws = null; // Important: Reset ws object
+                displayMessage({ type: 'system', text: 'Connection closed.' });
+                 if(messageInput) messageInput.disabled = true;
+                 if(sendButton) sendButton.disabled = true;
+
+                 // Attempt to reconnect only if the user had successfully joined before
+                 if (myUsername && event.code !== 1000 ) { // Don't reconnect on normal closure (code 1000) or if no username set
+                    console.log("Attempting reconnect in 5 seconds...");
+                    displayMessage({ type: 'system', text: 'Attempting to reconnect...' });
+                    setTimeout(connectWebSocket, 5000);
+                 } else if (!myUsername) {
+                     console.log("Not attempting reconnect: User session wasn't started.");
+                 } else {
+                     console.log("Not attempting reconnect: Closure was likely intentional or clean.");
+                 }
+            };
+
+            ws.onerror = (error) => {
+                // This event often precedes onclose when there's a connection issue
+                console.error('WebSocket encountered an error:', error);
+                displayMessage({ type: 'system', text: 'Connection error occurred.' });
+                // onclose will likely handle disabling inputs and attempting reconnect
+                // No need to null ws here usually, as onclose should follow.
+            };
+        }
+
+        // --- Displaying Messages ---
+        function displayMessage(messageData) {
+            if (!chatbox) {
+                 console.error("Cannot display message, chatbox element not found.");
+                 return;
+            }
+             console.log("Attempting to display message:", messageData);
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message');
+            const usernameSpan = document.createElement('span');
+            usernameSpan.classList.add('username');
+            const textSpan = document.createElement('span');
+            textSpan.classList.add('text');
+
+            // Determine message type and apply styling
+            switch (messageData.type) {
+                case 'chat':
+                    if (messageData.username === myUsername) {
+                        messageElement.classList.add('self');
+                        usernameSpan.textContent = messageData.username + " (You)"; // Clearly identify self
+                    } else {
+                        messageElement.classList.add('other');
+                        usernameSpan.textContent = messageData.username || 'Unknown User'; // Handle missing username
+                    }
+                    textSpan.textContent = messageData.text || ''; // Handle missing text
+                    messageElement.appendChild(usernameSpan);
+                    messageElement.appendChild(textSpan);
+                    break;
+                case 'system':
+                    messageElement.classList.add('system');
+                    textSpan.textContent = messageData.text || '(System message)';
+                    messageElement.appendChild(textSpan); // Only text for system messages
+                    break;
+                default:
+                    console.warn("Received unknown message type:", messageData.type, messageData);
+                    // Display something generic for unknown types
+                    messageElement.classList.add('system'); // Style as system message maybe
+                    textSpan.textContent = `[${messageData.type || 'unknown'}]: ${messageData.text || JSON.stringify(messageData)}`;
+                    messageElement.appendChild(textSpan);
+            }
+
+            chatbox.appendChild(messageElement);
+
+            // Auto-scroll logic (Scroll only if user is near the bottom)
+            const isScrolledNearBottom = chatbox.scrollHeight - chatbox.clientHeight <= chatbox.scrollTop + 100; // 100px threshold
+            if(isScrolledNearBottom) {
+                 console.log("Scrolling to bottom.");
+                 chatbox.scrollTo({ top: chatbox.scrollHeight, behavior: 'smooth' });
+            } else {
+                 console.log("User scrolled up, not auto-scrolling.");
+            }
+        }
+
+        // --- Sending Messages ---
+        function sendMessage() {
+            if (!messageInput) return; // Safety check
+            const messageText = messageInput.value.trim();
+            console.log(`Attempting to send message: "${messageText}"`);
+
+            if (!messageText) {
+                console.log("Not sending empty message.");
+                return; // Don't send empty messages
+            }
+
+            if (!ws || ws.readyState !== WebSocket.OPEN) {
+                 console.warn("Cannot send message, WebSocket is not open.");
+                 displayMessage({ type: 'system', text: 'Error: Not connected to chat server.' });
+                 return;
+            }
+
+            // Construct the message object
+            const messageData = {
+                type: 'chat',
+                username: myUsername, // Include the sender's username
+                text: messageText
+            };
+
+            // Send the message as a JSON string
+            try {
+                ws.send(JSON.stringify(messageData));
+                console.log("Message sent successfully:", messageData);
+                messageInput.value = ''; // Clear the input field after sending
+                messageInput.focus(); // Keep focus on input
+            } catch (error) {
+                console.error("Error sending message via WebSocket:", error);
+                displayMessage({ type: 'system', text: 'Error: Could not send message.' });
+            }
+        }
+
+        // --- Setup Event Listeners ---
+        function setupListeners() {
+             console.log("Setting up event listeners...");
+             // Modal listeners
+             if (modalSetUsernameButton && modalUsernameInput) {
+                 modalSetUsernameButton.addEventListener('click', handleUsernameSubmit);
+                 modalUsernameInput.addEventListener('keypress', (event) => {
+                     if (event.key === 'Enter') {
+                         handleUsernameSubmit();
+                     }
+                 });
+                 console.log("Modal listeners attached.");
+             } else {
+                 console.error("Failed to attach modal listeners: Button or Input element not found.");
+             }
+
+             // Chat input listeners
+             if (sendButton && messageInput) {
+                  sendButton.addEventListener('click', sendMessage);
+                  messageInput.addEventListener('keypress', (event) => {
+                      if (event.key === 'Enter') {
+                          sendMessage();
+                      }
+                  });
+                   console.log("Chat input listeners attached.");
+             } else {
+                  console.error("Failed to attach chat input listeners: Button or Input element not found.");
+             }
+        }
+
+
+        // --- Initialization ---
+        // Use DOMContentLoaded which fires when the HTML structure is ready
+        document.addEventListener('DOMContentLoaded', () => {
+             console.log("DOMContentLoaded event fired. Initializing chat setup...");
+             try {
+                 setupListeners(); // Attach listeners first
+
+                 const savedUsername = localStorage.getItem('chatUsername');
+                 console.log(`Retrieved username from localStorage: "${savedUsername}"`);
+
+                 if (savedUsername) {
+                     console.log("Found saved username. Starting chat directly.");
+                     startChat(savedUsername); // Start chat directly if username exists
+                 } else {
+                     console.log("No saved username found. Showing username modal.");
+                     showModal(true); // Show username prompt modal if no username saved
+                 }
+             } catch (error) {
+                 console.error("Error during chat initialization:", error);
+                 alert("An error occurred while setting up the chat. Please check the developer console (F12) for details.");
+                 // Fallback: try showing the modal anyway if init fails badly
+                 if(modalOverlay && !modalOverlay.classList.contains('hidden')) {
+                    // If modal isn't already visible (implying showModal might have failed)
+                    showModal(true);
+                 }
+             }
+        });
+
+        console.log("Chat script finished initial execution.");
+
+    </script>
+</body>
+</html>
