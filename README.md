@@ -1,6 +1,6 @@
 # 🚀 LiveChat: Real-Time Chat with Node.js & WebSockets
 
-![LiveChat Demo](./docs/livechat-demo.gif)
+![LiveChat Demo](./docs/livechat-demo.png)
 *(Add a GIF or screenshot here showing the chat in action!)*
 
 ---
@@ -45,10 +45,10 @@ To run this project locally, follow these steps:
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/YOUR_USERNAME/YOUR_REPOSITORY_NAME.git
+    git clone https://github.com/MegtonLabs/Chat-Application.git
     cd YOUR_REPOSITORY_NAME
     ```
-    *(Replace `YOUR_USERNAME` and `YOUR_REPOSITORY_NAME`)*
+    *(Replace `MegtonLabs` and `Chat-Application`)*
 
 2.  **Install dependencies:**
     You need [Node.js](https://nodejs.org/) and npm (which comes with Node.js) installed.
@@ -116,23 +116,3 @@ To run this project locally, follow these steps:
 *   **Deployment:** Add instructions/scripts for deploying to platforms like Heroku, Vercel, or a VPS.
 
 ---
-
-## 🙏 Contributing
-
-Contributions are welcome! If you have ideas for improvements or find bugs, feel free to open an issue or submit a pull request.
-
-1.  Fork the Project
-2.  Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3.  Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4.  Push to the Branch (`git push origin feature/AmazingFeature`)
-5.  Open a Pull Request
-
----
-
-## 📄 License
-
-Distributed under the MIT License. See `LICENSE` file for more information.
-
----
-
-*Happy Chatting!*
