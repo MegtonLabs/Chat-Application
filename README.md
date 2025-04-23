@@ -46,15 +46,12 @@ To run this project locally, follow these steps:
     git clone https://github.com/MegtonLabs/Chat-Application.git
     cd Chat-Application
     ```
-    *(Replace `MegtonLabs` and `Chat-Application`)*
 
 2.  **Install dependencies:**
     You need [Node.js](https://nodejs.org/) and npm (which comes with Node.js) installed.
     ```bash
-    npm install
+    npm install ws open
     ```
-    *(This installs `ws` and `open`)*
-
 ---
 
 ## ▶️ Running the Application
