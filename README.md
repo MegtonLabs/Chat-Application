@@ -1,8 +1,6 @@
 # 🚀 LiveChat: Real-Time Chat with Node.js & WebSockets
 
 ![LiveChat Demo](./docs/livechat-demo.png)
-*(Add a GIF or screenshot here showing the chat in action!)*
-
 ---
 
 ## ✨ Overview
