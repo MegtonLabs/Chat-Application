@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Juriher Mallick - CV</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <!-- Font Awesome for icons -->
+    <style>
+      /* Basic Reset */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        /* ## Updated Font Family ## */
+        font-family: "Lato", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background-color: #f4f4f4;
+        padding: 20px;
+        -webkit-font-smoothing: antialiased; /* Improves font rendering on some browsers */
+        -moz-osx-font-smoothing: grayscale; /* Improves font rendering on some browsers */
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 20px auto;
+        background-color: #fff;
+        padding: 30px 40px;
+        border-radius: 8px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      }
+
+      /* Header */
+      header {
+        text-align: center;
+        margin-bottom: 30px;
+        border-bottom: 2px solid #eee;
+        padding-bottom: 20px;
+      }
+
+      header h1 {
+        font-size: 2.8em;
+        margin-bottom: 5px;
+        color: #2c3e50;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 700; /* Using the bold weight */
+      }
+
+      header .subtitle {
+        font-size: 1.2em;
+        color: #555;
+        margin-bottom: 15px;
+        font-weight: 400; /* Regular weight */
+      }
+
+      .contact-info {
+        font-size: 0.95em;
+        color: #444;
+      }
+
+      .contact-info span {
+        margin: 0 8px;
+        white-space: nowrap;
+      }
+
+      .contact-info i {
+        margin-right: 5px;
+        color: #3498db;
+      }
+
+      .contact-info a {
+        color: #3498db;
+        text-decoration: none;
+      }
+
+      .contact-info a:hover {
+        text-decoration: underline;
+      }
+
+      /* Sections */
+      section {
+        margin-bottom: 25px;
+      }
+
+      section h2 {
+        font-size: 1.6em;
+        color: #3498db;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 5px;
+        margin-bottom: 15px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 700; /* Bold weight for headings */
+      }
+
+      /* Objective Section */
+      .objective p {
+        font-size: 1.05em;
+        /* ## Removed text-align: justify; ## Defaults to left, which is better here */
+      }
+
+      /* Skills Section */
+      .skills ul {
+        list-style: none;
+        padding: 0;
+        column-count: 2;
+        column-gap: 40px;
+      }
+
+      .skills li {
+        margin-bottom: 8px;
+        font-size: 1em;
+      }
+
+      .skills strong {
+        font-weight: 700; /* Bold weight */
+        color: #444;
+      }
+
+      /* Projects Section */
+      .project-item {
+        margin-bottom: 20px;
+        padding-left: 15px;
+        border-left: 3px solid #eee;
+      }
+
+      .project-item h3 {
+        font-size: 1.2em;
+        margin-bottom: 5px;
+        color: #2c3e50;
+        font-weight: 700; /* Bold weight */
+      }
+
+      .project-item p {
+        margin-bottom: 8px;
+      }
+
+      .project-item ul {
+        list-style: disc;
+        margin-left: 20px;
+        margin-bottom: 10px;
+      }
+
+      .project-item li {
+        margin-bottom: 5px;
+      }
+
+      .project-item ul strong {
+        font-weight: 700; /* Bold weight */
+      }
+
+      .project-item em {
+        font-style: italic;
+        color: #555;
+        font-size: 0.9em;
+      }
+
+      /* Experience Section */
+      .job {
+        margin-bottom: 20px;
+      }
+
+      .job h3 {
+        font-size: 1.2em;
+        margin-bottom: 3px;
+        color: #2c3e50;
+        font-weight: 700; /* Bold weight */
+      }
+
+      .job p em {
+        font-style: italic;
+        color: #555;
+        font-size: 0.95em;
+      }
+
+      .job ul {
+        list-style: disc;
+        margin-left: 20px;
+      }
+
+      .job li {
+        margin-bottom: 5px;
+      }
+
+      /* Education Section */
+      .education-item {
+        margin-bottom: 15px;
+      }
+
+      .education-item h3 {
+        font-size: 1.1em;
+        margin-bottom: 3px;
+        color: #2c3e50;
+        font-weight: 700; /* Bold weight */
+      }
+
+      .education-item p {
+        margin: 0;
+        font-size: 1em;
+        color: #555;
+      }
+
+      /* Languages Section */
+      .languages ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      .languages li {
+        margin-bottom: 5px;
+      }
+
+      .languages strong {
+        font-weight: 700; /* Bold weight */
+        color: #444;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .container {
+          padding: 20px 25px;
+        }
+
+        header h1 {
+          font-size: 2.2em;
+        }
+        header .subtitle {
+          font-size: 1.1em;
+        }
+        .contact-info span {
+          display: block;
+          margin: 5px 0;
+          text-align: center;
+        }
+        .contact-info span:first-child {
+          margin-top: 10px;
+        }
+
+        section h2 {
+          font-size: 1.4em;
+        }
+
+        .skills ul {
+          column-count: 1;
+        }
+      }
+
+      @media (max-width: 480px) {
+        body {
+          padding: 10px;
+        }
+        .container {
+          padding: 15px 20px;
+          margin: 10px auto;
+        }
+
+        header h1 {
+          font-size: 1.8em;
+        }
+        header .subtitle {
+          font-size: 1em;
+        }
+        .contact-info {
+          font-size: 0.9em;
+        }
+        section h2 {
+          font-size: 1.3em;
+        }
+        .project-item h3,
+        .job h3,
+        .education-item h3 {
+          font-size: 1.1em;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>JURIHER MALLICK</h1>
+        <p class="subtitle">Full-Stack Web Developer | New Graduate</p>
+        <div class="contact-info">
+          <span><i class="fas fa-phone"></i> +91 7478673245</span> |
+          <span
+            ><i class="fas fa-envelope"></i>
+            <a href="mailto:zuriher100@gmail.com">zuriher100@gmail.com</a></span
+          >
+          |
+          <span
+            ><i class="fas fa-map-marker-alt"></i> Kolkata, West Bengal,
+            India</span
+          >
+          |
+          <span
+            ><i class="fab fa-github"></i>
+            <a
+              href="https://github.com/MegtonLabs"
+              target="_blank"
+              rel="noopener noreferrer"
+              >github.com/MegtonLabs</a
+            ></span
+          >
+          <!-- Add LinkedIn if you have one:
+                | <span><i class="fab fa-linkedin"></i> <a href="YOUR_LINKEDIN_URL" target="_blank" rel="noopener noreferrer">LinkedIn</a></span>
+                -->
+        </div>
+      </header>
+
+      <section class="objective">
+        <h2>OBJECTIVE</h2>
+        <p>
+          Aspiring full-stack web developer with a strong foundation in
+          programming languages and web technologies, seeking opportunities to
+          leverage and expand my technical skills within a dynamic environment.
+        </p>
+      </section>
+
+      <section class="skills">
+        <h2>TECHNICAL SKILLS</h2>
+        <ul>
+          <li>
+            <strong>Programming Languages:</strong> Python, JavaScript, C, C++
+          </li>
+          <li>
+            <strong>Frontend:</strong> HTML5, CSS3, Tailwind CSS, JavaScript
+          </li>
+          <li><strong>Backend:</strong> Node.js, Express.js</li>
+          <li><strong>Databases:</strong> MongoDB, Redis, Neo4j, Mysql</li>
+          <li>
+            <strong>APIs & Protocols:</strong> RESTful API Design, WebSockets
+            (Socket.IO)
+          </li>
+          <li><strong>Tools & Technologies:</strong> Git, Docker, Postman</li>
+          <li>
+            <strong>AI:</strong> Diffusion Models, LoRA Training
+          <li>
+            <strong>Other:</strong> Full-Stack Web Development, Responsive
+            Design
+          </li>
+        </ul>
+      </section>
+
+      <section class="projects">
+        <h2>PROJECT EXPERIENCE</h2>
+
+        <div class="project-item">
+          <h3>JECA Preparation Web Application</h3>
+          <p>
+            Led the development of a JECA preparation platform with a team of 3 friends to assist
+students preparing for the JECA entrance exam. Utilized a combination of frontend and backend
+technologies to create a seamless user experience.
+          </p>
+          <ul>
+            <li>
+              <strong>Frontend:</strong> Designed and implemented an interactive
+              and responsive UI using HTML, CSS, and JavaScript.
+            </li>
+            <li>
+              <strong>Backend:</strong> Built robust backend services using
+              Node.js and Python, featuring APIs for user registration, login,
+              and profile management.
+            </li>
+            <li>
+              <strong>Database:</strong> Utilized Neo4j for graph-based data
+              relationships and Redis for caching to enhance performance.
+            </li>
+            <li>
+              <strong>Collaboration:</strong> Managed project tasks, integrated
+              code contributions, and ensured smooth deployment using Git.
+            </li>
+            <li>
+              <em>Technologies:</em> Node.js, Python, Neo4j, Redis, HTML, CSS,
+              JavaScript, Git
+            </li>
+          </ul>
+        </div>
+
+        <div class="project-item">
+          <h3>Weather Application</h3>
+          <p>A responsive weather app built using HTML, CSS, and JavaScript.</p>
+          <ul>
+            <li>
+                Developed a sleek and minimal web application that fetches real-time weather data based on user-inputted city names.
+            </li>
+            <li>
+                Integrated OpenWeatherMap API to display temperature, humidity, wind speed, and current weather conditions.
+            </li>
+            <li>
+                Designed a responsive UI ensuring optimal user experience across both desktop and mobile devices.
+            </li>
+            <li>
+                Focused on clean code structure, intuitive design, and easy usability.
+            </li>
+            <li>
+              <em>Technologies:</em> JHTML5, CSS3, JavaScript, OpenWeatherMap API
+            </li>
+          </ul>
+        </div>
+
+        <div class="project-item">
+          <h3>LiveChat – Real-Time Chat Application</h3>
+          <p>
+            A responsive chat app built with Node.js and native WebSocket API.
+          </p>
+          <ul>
+            <li>
+                Developed a real-time group chat application enabling instant, bi-directional messaging between users without page reloads.
+            </li>
+            <li>
+            Implemented WebSocket communication using the ws library on a Node.js server to broadcast messages across all connected clients.
+            </li>
+
+            <li>
+            Designed a simple, responsive frontend using HTML, CSS, and JavaScript with username persistence via localStorage.
+            </li>
+            <li>
+            Enabled features such as auto-scrolling, connection status updates, and seamless multi-user interaction.
+
+            </li>
+            <li>
+              <em>Technologies:</em>Node.js, WebSocket (ws), HTML5, CSS3, JavaScript 
+            </li>
+          </ul>
+        </div>
+
+        <div class="project-item">
+          <h3>CNN Digits Classifier – Digit Recognition</h3>
+          <p>An interactive image classification project built with Python and TensorFlow.
+        </p>
+          <ul>
+            <li>Designed and implemented a Convolutional Neural Network (CNN) model to classify handwritten digits with high accuracy using the MNIST dataset.</li>
+            <li>
+                Utilized TensorFlow and Keras for model building, training, evaluation, and deployment.
+            </li>
+            <li>
+                Included a user-friendly interface using Tkinter for real-time digit prediction.
+            </li>
+            <li>
+                Focused on model performance optimization through data preprocessing, hyperparameter tuning, and evaluation metrics.
+            </li>
+            <li>
+                Planned future integration with tools like Streamlit or Gradio for enhanced interactivity.
+            </li>
+            <li><em>Tools & Technologies: </em> Python, TensorFlow, Keras, Tkinter, Matplotlib</li>
+          </ul>
+        </div>
+
+        <div class="project-item">
+          <h3>Image Generator – Local SDXL-Based Image Generation Tool</h3>
+          <p>
+            A high-performance image generator using SDXL models and Python.
+        </p>
+          <ul>
+            <li>
+                Built a local image generation tool using Stable Diffusion XL (SDXL) architecture for producing high-quality images without relying on external APIs or internet access.
+            </li>
+            <li>
+                Designed for fast execution and efficient resource use, making it suitable for offline creative workflows.
+            </li>
+            <li>
+                Developed with a simple Python-based interface (app.py) for easy execution and customization.
+            </li>
+            <li><em>Technologies:</em>Python, SDXL, Stable Diffusion pipline, Local gradio Inference</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="experience">
+        <h2>PROFESSIONAL EXPERIENCE</h2>
+        <div class="job">
+          <h3>Freelance Web Developer (Remote)</h3>
+          <p><em>Fiverr Platform | 2022 – 2023</em></p>
+          <ul>
+           
+            <li>
+            Built a Resturent website using HTML, CSS, JavaScript, mongoDB, nodeJs, redis
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="education">
+        <h2>EDUCATION</h2>
+        <div class="education-item">
+          <h3>Bachelor of Computer Applications (BCA)</h3>
+          <p>Panskura Banamali College, Panskura, West Bengal | 2021 – 2023</p>
+          <!-- <p>Relevant Coursework: Data Structures, Algorithms, Database Management, Web Technologies, Operating Systems</p> -->
+          <!-- <p>GPA: [Your GPA if good, e.g., 8.5/10]</p> -->
+        </div>
+        <div class="education-item">
+          <h3>High School</h3>
+          <p>Boruna Satsanga High School | Graduated 2021</p>
+          <!-- Add stream if relevant, e.g., Science Stream -->
+        </div>
+      </section>
+
+      <section class="languages">
+        <h2>LANGUAGES</h2>
+        <ul>
+          <li><strong>Bengali:</strong> Fluent</li>
+          <li><strong>Hindi:</strong> Basic</li>
+          <li>
+            <strong>English:</strong> Basic
+          </li>
+        </ul>
+      </section>
+
+      <section class="declaretion">
+        <h2>DECLARETION</h2>
+        <p>
+            I confirm that all the information provided above is true and complete to the best of my knowledge. I understand that any false or misleading details may lead to disqualification or other consequences.
+        </p>
+      </section>
+
+
+    </div>
+    <!-- /container -->
+  </body>
+</html>
